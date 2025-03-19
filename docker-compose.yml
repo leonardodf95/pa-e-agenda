@@ -1,0 +1,25 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: e_agenda_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_default}
+      MYSQL_DATABASE: ${DB_NAME:-e_agenda}
+      MYSQL_USER: ${DB_USER:-e_agenda}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-e_agenda}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mysql_data:
+    driver: local
