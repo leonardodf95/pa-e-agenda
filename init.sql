@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
   status char(1) DEFAULT 'A',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-  UNIQUE (user_id, role_id)
+  UNIQUE (user_id)
 );
 CREATE TABLE IF NOT EXISTS disciplines (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
