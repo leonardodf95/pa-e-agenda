@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   created_at DATETIME DEFAULT NOW(),
-  status char(1) DEFAULT 'A'
+  status char(1) DEFAULT 'A',
+  token VARCHAR(255),
 );
 CREATE TABLE IF NOT EXISTS roles (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -95,18 +96,18 @@ CREATE TABLE IF NOT EXISTS messages (
   sender_id BIGINT NOT NULL,
   title VARCHAR(255) NOT NULL,
   message TEXT NOT NULL,
-  type CHAR(1) NOT NULL DEFAULT 'I',
-  destination BIGINT NOT NULL,
+  type ENUM('info', 'homework', 'exam', 'event', 'other') NOT NULL DEFAULT 'info',
   created_at DATETIME DEFAULT NOW(),
   status char(1) DEFAULT 'A',
   FOREIGN KEY (sender_id) REFERENCES users(id)
 );
 CREATE TABLE messages_destinations (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  communication_id BIGINT NOT NULL,
-  destination_type ENUM('user', 'role', 'class'),
+  message_id BIGINT NOT NULL,
   destination_id BIGINT NOT NULL,
-  FOREIGN KEY (communication_id) REFERENCES messages(id)
+  readed TINYINT DEFAULT 0,
+  readed_at DATETIME,
+  FOREIGN KEY (message_id) REFERENCES messages(id)
 );
 CREATE TABLE IF NOT EXISTS events (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,

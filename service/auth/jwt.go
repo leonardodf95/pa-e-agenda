@@ -14,7 +14,7 @@ import (
 	"github.com/leonardodf95/pa-e-agenda/utils"
 )
 
-const userContextKey = types.ContextKey("user")
+const UserContextKey = types.ContextKey("user")
 
 func CreateJWT(secret []byte, user types.User) (string, error) {
 	expiration := time.Second * time.Duration(config.Envs.JWTExpiration)
@@ -36,7 +36,7 @@ func CreateJWT(secret []byte, user types.User) (string, error) {
 	return tokenString, nil
 }
 
-func WithJWTAuth(handler http.HandlerFunc, store types.UserStore) http.HandlerFunc {
+func WithJWTAuth(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenString := getTokenFromRequest(r)
 
@@ -66,7 +66,7 @@ func WithJWTAuth(handler http.HandlerFunc, store types.UserStore) http.HandlerFu
 		}
 
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, userContextKey, user)
+		ctx = context.WithValue(ctx, UserContextKey, user)
 
 		r = r.WithContext(ctx)
 
@@ -104,7 +104,7 @@ func PermissionDenied(w http.ResponseWriter) {
 }
 
 func GetUserFromContext(ctx context.Context) types.User {
-	user, ok := ctx.Value(userContextKey).(types.User)
+	user, ok := ctx.Value(UserContextKey).(types.User)
 	if !ok {
 		return types.User{}
 	}

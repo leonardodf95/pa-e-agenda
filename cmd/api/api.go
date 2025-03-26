@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/leonardodf95/pa-e-agenda/service/roles"
 	"github.com/leonardodf95/pa-e-agenda/service/user"
 )
 
@@ -30,6 +31,10 @@ func (s *APIServer) Start() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
+
+	rolesStore := roles.NewStore(s.db)
+	rolesHandler := roles.NewHandler(rolesStore)
+	rolesHandler.RegisterRoutes(subrouter)
 
 	routes.PathPrefix("/").Handler(http.FileServer(http.Dir("static")))
 

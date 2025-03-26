@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	validator "github.com/go-playground/validator/v10"
 )
@@ -48,5 +49,12 @@ func WriteError(w http.ResponseWriter, status int, err error) {
 }
 
 func ParseInt(s string) (int, error) {
+	if s == "" {
+		return 0, nil
+	}
 	return strconv.Atoi(s)
+}
+
+func GetCurrentTime() time.Time {
+	return time.Now()
 }

@@ -17,6 +17,7 @@ type Config struct {
 	DBName        string
 	JWTExpiration int64
 	JWTSecret     string
+	FbCredentials string
 }
 
 var Envs = initConfig()
@@ -32,6 +33,7 @@ func initConfig() Config {
 		DBName:        getEnv("DB_NAME", "e_agenda"),
 		JWTExpiration: getEnvAsInt("JWT_EXPIRATION", 3600),
 		JWTSecret:     getEnv("JWT_SECRET", "secret"),
+		FbCredentials: getEnv("FB_CREDENTIALS", ""),
 	}
 }
 
