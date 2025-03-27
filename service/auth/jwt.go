@@ -19,11 +19,16 @@ const UserContextKey = types.ContextKey("user")
 func CreateJWT(secret []byte, user types.User) (string, error) {
 	expiration := time.Second * time.Duration(config.Envs.JWTExpiration)
 
+	tokenFb := *user.Token
+
+	role := *user.Role
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":        user.ID,
 		"email":     user.Email,
 		"name":      user.Name,
-		"role":      user.Role,
+		"role":      role,
+		"token":     tokenFb,
 		"expiredAt": expiration,
 	})
 
@@ -59,10 +64,20 @@ func WithJWTAuth(handler http.HandlerFunc) http.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		user := types.User{
+
+		role := int64(claims["role"].(float64))
+		if role == 0 {
+			PermissionDenied(w)
+			return
+		}
+		tokenFb := claims["token"].(string)
+
+		user := types.UserPayloadAuth{
 			ID:    int(claims["id"].(float64)),
 			Name:  claims["name"].(string),
 			Email: claims["email"].(string),
+			Role:  role,
+			Token: tokenFb,
 		}
 
 		ctx := r.Context()
@@ -103,10 +118,10 @@ func PermissionDenied(w http.ResponseWriter) {
 	utils.WriteError(w, http.StatusForbidden, fmt.Errorf("permission denied"))
 }
 
-func GetUserFromContext(ctx context.Context) types.User {
-	user, ok := ctx.Value(UserContextKey).(types.User)
+func GetUserFromContext(ctx context.Context) types.UserPayloadAuth {
+	user, ok := ctx.Value(UserContextKey).(types.UserPayloadAuth)
 	if !ok {
-		return types.User{}
+		return types.UserPayloadAuth{}
 	}
 
 	return user

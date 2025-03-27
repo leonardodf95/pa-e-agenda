@@ -114,7 +114,7 @@ func (s *Store) InsertMessage(ctx context.Context, m *types.Message) error {
 					message_id, 
 					destination_id,
 					readed
-			) VALUES (?, ?)
+			) VALUES (?, ?,?)
 	`)
 	if err != nil {
 		return fmt.Errorf("erro ao preparar statement: %w", err)

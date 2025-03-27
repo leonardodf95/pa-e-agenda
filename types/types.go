@@ -21,6 +21,10 @@ type MessageStore interface {
 	InsertMessage(ctx context.Context, m *Message) error
 }
 
+type PushNotification interface {
+	SendPushNotification(message PushNotificationMessage) error
+}
+
 type ContextKey string
 
 type RegisterUserPayload struct {
@@ -42,8 +46,16 @@ type User struct {
 	Password  string    `json:"password" db:"password"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	Status    string    `json:"status" db:"status"`
-	Role      int64     `json:"roles"`
-	Token     string    `json:"token"`
+	Role      *int64    `json:"roles" db:"role"`
+	Token     *string   `json:"token" db:"token"`
+}
+
+type UserPayloadAuth struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Role  int64  `json:"role"`
+	Token string `json:"token"`
 }
 
 type Role struct {
@@ -89,4 +101,11 @@ type FilterMessageQuery struct {
 	Status        string `json:"status"`
 	DestinationID int    `json:"destination_id"`
 	Readed        bool   `json:"readed"`
+}
+
+type PushNotificationMessage struct {
+	Token string `json:"token"`
+	Title string `json:"title"`
+	Body  string `json:"body"`
+	Topic string `json:"topic"`
 }

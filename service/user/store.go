@@ -16,7 +16,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) GetUserByEmail(email string) (*types.User, error) {
-	sql := "SELECT u.*, ur.role_id FROM users u JOIN user_roles ur ON u.id = ur.user_id WHERE email = ? AND ur.status = 'A';"
+	sql := "SELECT u.*, ur.role_id as role FROM users u LEFT JOIN user_roles ur ON ur.user_id =u.id  WHERE u.email = ? AND u.status = 'A';"
 	rows, err := s.db.Query(sql, email)
 	if err != nil {
 		return nil, err
@@ -98,9 +98,9 @@ func (s *Store) ListUsers(filters types.User) ([]types.User, error) {
 		parameters = append(parameters, filters.Status)
 	}
 
-	if filters.Role != 0 {
+	if filters.Role != nil && *filters.Role != 0 {
 		sql += " AND ur.role_id = ?"
-		parameters = append(parameters, filters.Role)
+		parameters = append(parameters, *filters.Role)
 	}
 
 	rows, err := s.db.Query(sql, parameters...)
@@ -120,7 +120,7 @@ func (s *Store) ListUsers(filters types.User) ([]types.User, error) {
 
 func scanRowIntoUser(row *sql.Rows) (*types.User, error) {
 	u := new(types.User)
-	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.CreatedAt, &u.Status, &u.Role)
+	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.CreatedAt, &u.Status, &u.Token, &u.Role)
 	if err != nil {
 		return nil, err
 	}

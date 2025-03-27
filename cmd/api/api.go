@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	firebasesdk "github.com/leonardodf95/pa-e-agenda/libs/firebaseSDK"
+	"github.com/leonardodf95/pa-e-agenda/service/messages"
 	"github.com/leonardodf95/pa-e-agenda/service/roles"
 	"github.com/leonardodf95/pa-e-agenda/service/user"
 )
@@ -28,6 +30,8 @@ func (s *APIServer) Start() error {
 
 	subrouter.Use(s.logRequest)
 
+	notifier := firebasesdk.NewPushNotification()
+
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
@@ -35,6 +39,10 @@ func (s *APIServer) Start() error {
 	rolesStore := roles.NewStore(s.db)
 	rolesHandler := roles.NewHandler(rolesStore)
 	rolesHandler.RegisterRoutes(subrouter)
+
+	messageStore := messages.NewStore(s.db)
+	messageHandler := messages.NewHandler(messageStore, notifier)
+	messageHandler.RegisterRoutes(subrouter)
 
 	routes.PathPrefix("/").Handler(http.FileServer(http.Dir("static")))
 

@@ -12,11 +12,12 @@ import (
 )
 
 type Handler struct {
-	store types.MessageStore
+	store    types.MessageStore
+	notifier types.PushNotification
 }
 
-func NewHandler(store types.MessageStore) *Handler {
-	return &Handler{store: store}
+func NewHandler(store types.MessageStore, notifier types.PushNotification) *Handler {
+	return &Handler{store: store, notifier: notifier}
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
@@ -96,6 +97,18 @@ func (h *Handler) handleSendMessage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error inserting message: %v", err))
 		return
+	}
+
+	pushNotifier := types.PushNotificationMessage{
+		Title: message.Title,
+		Body:  message.Message,
+		Topic: payload.Type,
+		Token: user.Token,
+	}
+
+	err = h.notifier.SendPushNotification(pushNotifier)
+	if err != nil {
+		fmt.Printf("error sending push notification: %v", err)
 	}
 
 	utils.WriteJSON(w, http.StatusCreated, message)

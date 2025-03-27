@@ -13,7 +13,7 @@ func TestCreateJWT(t *testing.T) {
 		ID:    1,
 		Name:  "Test Name",
 		Email: "test@mail.com",
-		Role:  1,
+		Role:  func(v int64) *int64 { return &v }(1),
 	}
 
 	token, err := CreateJWT(secret, user)
