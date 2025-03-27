@@ -152,6 +152,33 @@ func (s *Store) InsertMessage(ctx context.Context, m *types.Message) error {
 	return nil
 }
 
+func (s *Store) ListUsersTokens(users []int) (map[int][]string, error) {
+	query := `
+		SELECT user_id, token
+		FROM users_tokens
+		WHERE user_id IN (?)
+	`
+
+	rows, err := s.db.Query(query, users)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tokens := make(map[int][]string)
+	for rows.Next() {
+		var userID int
+		var token string
+		err := rows.Scan(&userID, &token)
+		if err != nil {
+			return nil, err
+		}
+		tokens[userID] = append(tokens[userID], token)
+	}
+
+	return tokens, nil
+}
+
 func scanRowIntoMessage(rows *sql.Rows) (types.Message, error) {
 	var m types.Message
 	err := rows.Scan(&m.ID, &m.SenderID, &m.Title, &m.Message, &m.Type, &m.CreatedAt, &m.Status)

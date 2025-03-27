@@ -99,17 +99,37 @@ func (h *Handler) handleSendMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pushNotifier := types.PushNotificationMessage{
-		Title: message.Title,
-		Body:  message.Message,
-		Topic: payload.Type,
-		Token: user.Token,
-	}
-
-	err = h.notifier.SendPushNotification(pushNotifier)
-	if err != nil {
-		fmt.Printf("error sending push notification: %v", err)
-	}
+	go func() {
+		h.sendPushNotifications(h.notifier, message)
+	}()
 
 	utils.WriteJSON(w, http.StatusCreated, message)
+}
+
+func (h *Handler) sendPushNotifications(notifier types.PushNotification, message *types.Message) error {
+	for _, destination := range message.Destination {
+		tokens, err := h.store.ListUsersTokens([]int{destination.DestinationID})
+		if err != nil {
+			return err
+		}
+
+		if len(tokens[destination.DestinationID]) == 0 {
+			continue
+		}
+
+		for _, token := range tokens[destination.DestinationID] {
+			pushMessage := types.PushNotificationMessage{
+				Title: message.Title,
+				Body:  message.Message,
+				Topic: message.Type,
+				Token: token,
+			}
+
+			err := notifier.SendPushNotification(pushMessage)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

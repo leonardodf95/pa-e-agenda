@@ -19,6 +19,7 @@ type RoleStore interface {
 type MessageStore interface {
 	GetMessages(filters FilterMessageQuery) ([]Message, error)
 	InsertMessage(ctx context.Context, m *Message) error
+	ListUsersTokens(ids []int) (map[int][]string, error)
 }
 
 type PushNotification interface {
