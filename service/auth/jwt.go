@@ -19,8 +19,6 @@ const UserContextKey = types.ContextKey("user")
 func CreateJWT(secret []byte, user types.User) (string, error) {
 	expiration := time.Second * time.Duration(config.Envs.JWTExpiration)
 
-	tokenFb := *user.Token
-
 	role := *user.Role
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -28,7 +26,6 @@ func CreateJWT(secret []byte, user types.User) (string, error) {
 		"email":     user.Email,
 		"name":      user.Name,
 		"role":      role,
-		"token":     tokenFb,
 		"expiredAt": expiration,
 	})
 
