@@ -26,10 +26,10 @@ func NewApiServer(addr string, db *sql.DB) *APIServer {
 
 func (s *APIServer) Start() error {
 	routes := mux.NewRouter()
+	routes.Use(enableCORS)
 	subrouter := routes.PathPrefix("/api/v1").Subrouter()
 
 	subrouter.Use(s.logRequest)
-
 	notifier := firebasesdk.NewPushNotification()
 
 	userStore := user.NewStore(s.db)
@@ -54,6 +54,25 @@ func (s *APIServer) Start() error {
 func (s *APIServer) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		next.ServeHTTP(w, r)
+	})
+}
+
+func enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// Set CORS headers for the response
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+
+		// If this is a preflight OPTIONS request, end here.
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent) // or http.StatusOK
+			return
+		}
+
+		// Continue to the next handler if not an OPTIONS request
 		next.ServeHTTP(w, r)
 	})
 }

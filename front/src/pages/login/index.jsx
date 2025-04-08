@@ -1,15 +1,23 @@
 // src/components/Login.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SendLogin } from "../../service/user/login.js";
+import { ST__TOKEN_KEY } from "../../constants/ls_keys.js";
 
 export default function Login() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   async function handleLogin(event) {
     event.preventDefault();
+    if (!email || !password) {
+      setError("Preencha todos os campos");
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -47,89 +55,117 @@ export default function Login() {
     }
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem(ST__TOKEN_KEY);
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-green-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        {/* Cabeçalho com o nome da aplicação */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-600">E-Agenda</h1>
-          <p className="text-gray-600 mt-2">
-            Conectando escola, alunos e famílias
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl flex flex-col md:flex-row overflow-hidden">
+        {/* Lado com imagem */}
+        <div className="md:w-1/2 bg-blue-200 flex items-center justify-center p-6">
+          <img
+            src="https://img.freepik.com/vetores-premium/estudantes-na-sala-de-aula-fazendo-anotacoes-desenho-animado-vetorial_701961-429.jpg"
+            alt="Educação"
+            className="max-h-80 object-contain rounded-xl shadow-lg"
+          />
         </div>
 
-        {/* Formulário de Login */}
-        <form className="space-y-6" onSubmit={handleLogin}>
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              E-mail
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
-              placeholder="Digite seu e-mail"
-              required
-              name="email"
-              value={email}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Senha
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
-              placeholder="Digite sua senha"
-              required
-              name="password"
-              value={password}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          {/* Botão de Login */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 font-semibold"
-            disabled={loading}
-            onClick={handleLogin}
-          >
-            Entrar
-          </button>
-        </form>
-
-        {/* Links adicionais */}
-        {/* <div className="mt-4 text-center text-sm">
-          <a href="#" className="text-blue-600 hover:underline">
-            Esqueceu sua senha?
-          </a>
-          <p className="mt-2 text-gray-600">
-            Não tem uma conta?{" "}
-            <a href="#" className="text-blue-600 hover:underline">
-              Registre-se
-            </a>
+        {/* Lado do formulário */}
+        <div className="md:w-1/2 p-8 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-blue-800 mb-4 text-center">
+            Bem-vindo à E-Agenda
+          </h2>
+          <p className="text-gray-600 text-center">
+            Sua agenda escolar virtual
           </p>
-        </div> */}
+          <p className="text-gray-600 text-center mb-6">
+            conectando escola, alunos e famílias
+          </p>
 
-        {/* Detalhe decorativo escolar */}
-        <div className="mt-6 flex justify-center gap-2">
-          <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-          <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-          <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                E-mail
+              </label>
+              <input
+                type="email"
+                placeholder="seu@email.com"
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                name="email"
+                value={email}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                required
+                autoComplete="email"
+                autoFocus
+                aria-label="E-mail"
+                aria-required="true"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Senha
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                name="password"
+                value={password}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                required
+                autoComplete="current-password"
+                aria-label="Senha"
+                aria-required="true"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={handleLogin}
+              disabled={loading}
+              aria-label="Entrar"
+            >
+              {loading ? (
+                <svg
+                  className="animate-spin h-5 w-5 text-white mx-auto"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 1 1 16 0A8 8 0 0 1 4 12z"
+                  ></path>
+                </svg>
+              ) : (
+                "Entrar"
+              )}
+            </button>
+            {error && (
+              <p className="text-red-500 text-sm text-center mt-2">{error}</p>
+            )}
+
+            <p className="text-sm text-center text-gray-500 mt-4">
+              Ainda não tem uma conta?{" "}
+              <a href="#" className="text-blue-600 hover:underline">
+                Fale com a escola
+              </a>
+            </p>
+          </form>
         </div>
       </div>
     </div>

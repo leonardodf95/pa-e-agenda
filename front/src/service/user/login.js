@@ -8,6 +8,7 @@ export async function SendLogin({ email, password }) {
       password,
     });
 
+    console.log("result :>> ", result);
     if (result.status === 200) {
       const { token } = result.data;
       localStorage.setItem(ST__TOKEN_KEY, token);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ST__TOKEN_KEY } from "../constants/ls_keys.js";
 
-const url = import.meta.env.BASE_URL || "http://localhost:8080"; // Fallback URL
+const url = import.meta.env.API_URL || "http://localhost:8080"; // Fallback URL
 
 const api = axios.create({
   baseURL: url,
@@ -13,10 +13,6 @@ api.interceptors.request.use(
       req.headers.Authorization = `Bearer ${localStorage.getItem(
         ST__TOKEN_KEY
       )}`;
-    }
-    if (req.method.toUpperCase() === "POST") {
-      req.headers["X-User-Id"] = localStorage.getItem(ST__IDUSUARIO);
-      req.headers["X-Req-Time"] = new Date().toISOString().substring(0, 16);
     }
 
     return req;
@@ -32,7 +28,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log("error :>> ", error.response.data.message);
+    console.log("error :>> ", error);
     if (
       error.response.status === 401 &&
       error.response.data.message === "Token não informado"
