@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "Prova de Matemática",
+    "description": "Prova de matemática, capítulo 3.",
+    "start_date": "2025-05-01T10:00:00Z",
+    "end_date": "2025-05-01T12:00:00Z",
+    "created_at": "2025-04-30T10:00:00Z",
+    "created_by": "Professor de Matemática",
+    "status": "A",
+    "type": "test"
+  },
+  {
+    "id": 2,
+    "title": "Reunião de equipe",
+    "description": "Reunião para discutir projetos e estratégias.",
+    "start_date": "2025-05-15T14:00:00Z",
+    "end_date": "2025-05-15T16:00:00Z",
+    "created_at": "2025-05-01T10:00:00Z",
+    "created_by": "Coordenação",
+    "status": "A",
+    "type": "meeting"
+  },
+  {
+    "id": 3,
+    "title": "Palestra sobre Educação",
+    "description": "Palestra com especialista em educação.",
+    "start_date": "2025-05-20T09:00:00Z",
+    "end_date": "2025-05-20T11:00:00Z",
+    "created_at": "2025-05-01T10:00:00Z",
+    "created_by": "Coordenação",
+    "status": "A",
+    "type": "meeting"
+  },
+  {
+    "id": 4,
+    "title": "Reunião de pais",
+    "description": "Reunião com os pais dos alunos.",
+    "start_date": "2025-05-25T19:00:00Z",
+    "end_date": "2025-05-25T21:00:00Z",
+    "created_at": "2025-05-01T10:00:00Z",
+    "created_by": "Coordenação",
+    "status": "A",
+    "type": "meeting"
+  },
+  {
+    "id": 5,
+    "title": "Recesso",
+    "description": "Recesso escolar.",
+    "start_date": "2025-05-28T00:00:00Z",
+    "end_date": "2025-06-04T23:59:59Z",
+    "created_at": "2025-05-01T10:00:00Z",
+    "created_by": "Coordenação",
+    "status": "A",
+    "type": "recess"
+  }
+]

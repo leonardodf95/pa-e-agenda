@@ -1,28 +1,33 @@
 import React from "react";
 import { Route, createBrowserRouter } from "react-router-dom";
 import PrivateRoute from "../components/private-route/index.jsx";
-import Dashboard from "../pages/dashboard/index.jsx";
+import Mensagens from "../pages/mensagens/index.jsx";
 import Login from "../pages/login/index.jsx";
+import Agenda from "../pages/agenda/index.jsx";
+
+export const ROUTE_MENSAGENS = "/mensagens";
+export const ROUTE_AGENDA = "/agenda";
+export const ROUTE_LOGIN = "/login";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: ROUTE_MENSAGENS,
     element: (
       <PrivateRoute>
-        <Dashboard />
+        <Mensagens />
       </PrivateRoute>
     ),
   },
   {
-    path: "/dashboard",
+    path: ROUTE_AGENDA,
     element: (
       <PrivateRoute>
-        <Dashboard />
+        <Agenda />
       </PrivateRoute>
     ),
   },
   {
-    path: "/login",
+    path: ROUTE_LOGIN,
     element: <Login />,
   },
 ]);

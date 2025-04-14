@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SendLogin } from "../../service/user/login.js";
 import { ST__TOKEN_KEY } from "../../constants/ls_keys.js";
+import { ROUTE_MENSAGENS } from "../../constants/routes.jsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export default function Login() {
     try {
       const result = await SendLogin(loginData);
       if (result) {
-        console.log("result :>> ", result);
+        navigate(ROUTE_MENSAGENS);
       } else {
         setError("E-mail ou senha inválidos");
       }
@@ -58,7 +59,7 @@ export default function Login() {
   useEffect(() => {
     const token = localStorage.getItem(ST__TOKEN_KEY);
     if (token) {
-      navigate("/dashboard");
+      navigate(ROUTE_MENSAGENS);
     }
   }, []);
 

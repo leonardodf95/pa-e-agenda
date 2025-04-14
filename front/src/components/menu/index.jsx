@@ -1,16 +1,44 @@
 // src/components/Sidebar.tsx
 import { useState } from "react";
-import { FiHome, FiCalendar, FiUsers, FiLogOut, FiMenu } from "react-icons/fi";
+import { FiCalendar, FiUsers, FiLogOut, FiMenu, FiInbox } from "react-icons/fi";
+import { ROUTE_AGENDA, ROUTE_MENSAGENS } from "../../constants/routes.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const menuItems = [
-    { icon: <FiHome />, label: "Início" },
-    { icon: <FiCalendar />, label: "Agenda" },
-    { icon: <FiUsers />, label: "Reuniões" },
-    { icon: <FiLogOut />, label: "Sair" },
+    {
+      icon: <FiInbox />,
+      label: "Mensagens",
+      cb: () => handleNavigation(ROUTE_MENSAGENS),
+    },
+    {
+      icon: <FiCalendar />,
+      label: "Agenda",
+      cb: () => handleNavigation(ROUTE_AGENDA),
+    },
+    { icon: <FiLogOut />, label: "Sair", cb: handleLogout },
   ];
+
+  function handleLogout() {
+    // Adicione aqui a lógica para logout
+    console.log("Logout");
+  }
+
+  function handleNavigation(route) {
+    if (route) {
+      navigate(route);
+    }
+  }
+
+  const path = window.location.pathname;
+  const classNameItemActive =
+    "bg-blue-700 text-white flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors";
+  const classNameItemInactive =
+    "bg-blue-800 text-white flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors";
 
   return (
     <div className="flex">
@@ -35,19 +63,21 @@ const Sidebar = () => {
           {menuItems.map((item, idx) => (
             <button
               key={idx}
-              className="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+              className={
+                path === `/${item.label.toLowerCase()}`
+                  ? classNameItemActive
+                  : classNameItemInactive
+              }
+              onClick={item.cb}
+              type="button"
+              aria-label={item.label}
+              title={item.label}
             >
               {item.icon}
               <span>{item.label}</span>
             </button>
           ))}
         </nav>
-      </div>
-
-      {/* Conteúdo da página principal (ajustado com padding para o menu) */}
-      <div className="flex-1 p-4 md:pl-64">
-        <h1 className="text-2xl font-semibold">Bem-vindo à E-Agenda!</h1>
-        {/* Aqui entra o conteúdo das páginas */}
       </div>
     </div>
   );

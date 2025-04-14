@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "type": "info",
+    "title": "Reunião agendada",
+    "message": "Reunião agendada para segunda-feira às 14h.",
+    "created_at": "2024-07-01T10:00:00Z",
+    "sender": "Coordenação",
+    "status": "A"
+  },
+  {
+    "id": 2,
+    "type": "homework",
+    "title": "Tarefa de Matemática",
+    "message": "Tarefa de matemática, página 42, exercícios 1 a 5. Para 02/07/2024.",
+    "created_at": "2024-06-30T10:00:00Z",
+    "sender": "Professor de Matemática",
+    "status": "A"
+  },
+  {
+    "id": 3,
+    "type": "event",
+    "title": "Reunião de equipe",
+    "message": "Reunião de equipe na próxima quarta-feira às 10h.",
+    "created_at": "2024-07-01T10:00:00Z",
+    "sender": "Coordenação",
+    "status": "A"
+  },
+  {
+    "id": 4,
+    "type": "info",
+    "title": "Novo material disponível",
+    "message": "Novo material de estudo disponível na plataforma.",
+    "created_at": "2024-07-01T10:00:00Z",
+    "sender": "Coordenação",
+    "status": "A"
+  },
+  {
+    "id": 5,
+    "type": "homework",
+    "title": "Tarefa de História",
+    "message": "Tarefa de história, capítulo 5, perguntas 1 a 3. Para 03/07/2024.",
+    "created_at": "2024-06-30T10:00:00Z",
+    "sender": "Professor de História",
+    "status": "A"
+  }
+]
